@@ -1,0 +1,79 @@
+<!-- frontend/customer.html (Full Code with Dynamic Cart, Forms, and Search) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Store - Products</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="/"><i class="fas fa-paw"></i><h1>Pet Store</h1></a>
+        </div>
+        <nav class="nav-icons">
+            <a href="/cart" class="cart-icon" title="View Cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count"><%= cartCount %></span> 
+            </a>
+            <a href="/profile" title="My Profile"><i class="fas fa-user-circle"></i></a>
+            <!-- Icon change for a clear "Sign In" action -->
+            <a href="/auth" title="Sign In / Register"><i class="fas fa-sign-in-alt"></i></a> 
+        </nav>
+    </header>  
+
+    <main class="content">
+        <section class="hero">
+            <h2>Everything Your Pet Needs</h2>
+            <p>Quality products for your furry, feathered, and scaly friends</p>
+            
+            <!-- SEARCH FORM: Submits a GET request to the home page -->
+            <form method="GET" action="/">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <!-- 'name="search"' sends the query. 'value' pre-fills the box after a search. -->
+                    <input type="text" name="search" placeholder="Search for products..." 
+                           value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+                    <!-- Hidden button allows pressing Enter to submit the search -->
+                    <button type="submit" style="display: none;"></button>
+                </div>
+            </form>
+        </section>
+
+        <section class="product-grid">
+            
+            <% if (products.length === 0 && searchQuery) { %>
+                <p class="no-results">No products found for "<strong><%= searchQuery %></strong>".</p>
+            <% } else { %>
+                <% products.forEach(product => { %>
+                <div class="product-card">
+                    <!-- FIX: This line adds the missing <img> tag, using the imageUrl variable. -->
+                    <img src="<%= product.imageUrl %>" 
+                         alt="<%= product.name %>" 
+                         class="w-full h-48 object-cover rounded-t-lg"
+                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e0e0e0/333333?text=Image+Missing'">
+                         
+                    <div class="product-info">
+                        <h3><%= product.name %></h3>
+                        <span class="price">$<%= product.price.toFixed(2) %></span> 
+                        <p class="description"><%= product.description %></p>
+                        
+                        <form method="POST" action="/cart/add">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <button type="submit" class="add-to-cart-btn">
+                                Add to Cart <i class="fas fa-plus"></i>
+                            </button>
+                        </form>
+                        
+                    </div>
+                </div>
+                <% }); %>
+            <% } %>
+
+        </section>
+    </main>
+
+</body>
+</html>

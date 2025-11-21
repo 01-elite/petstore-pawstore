@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="/"><i class="fas fa-arrow-left"></i><h1>Back to Store</h1></a>
+        </div>
+        <nav class="nav-icons">
+            <a href="/cart" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count"><%= cartItems.length %></span> 
+            </a>
+            <a href="/auth"><i class="fas fa-user"></i></a>
+            <a href="#"><i class="fas fa-sign-out-alt"></i></a>
+        </nav>
+    </header>
+
+    <main class="cart-page">
+        <h2 class="cart-title"><i class="fas fa-shopping-bag"></i> Shopping Cart</h2>
+        
+        <% if (cartItems.length === 0) { %>
+            <p class="empty-cart-message">Your cart is empty. <a href="/">Start shopping!</a></p>
+        <% } else { %>
+        
+            <% cartItems.forEach(item => { %>
+                <div class="cart-item">
+                    <div class="item-details">
+                        <div class="item-image-placeholder">[Image]</div>
+                        <div>
+                            <h3 class="item-name"><%= item.name %></h3>
+                            <p class="item-unit-price">Unit Price: $<%= item.price.toFixed(2) %></p>
+                        </div>
+                    </div>
+                    
+                    <div class="item-controls">
+                        <div class="quantity-control">
+                            
+                            <form method="POST" action="/cart/update" style="display:inline;">
+                                <input type="hidden" name="productId" value="<%= item.id %>">
+                                <input type="hidden" name="action" value="decrement">
+                                <button class="qty-btn" type="submit" <%= item.quantity <= 1 ? 'disabled' : '' %> >-</button>
+                            </form>
+
+                            <input type="text" value="<%= item.quantity %>" readonly>
+                            
+                            <form method="POST" action="/cart/update" style="display:inline;">
+                                <input type="hidden" name="productId" value="<%= item.id %>">
+                                <input type="hidden" name="action" value="increment">
+                                <button class="qty-btn" type="submit">+</button>
+                            </form>
+                            
+                        </div>
+                        <span class="item-price">$<%= item.totalPrice %></span>
+                        
+                        <form method="POST" action="/cart/update" style="display:inline;">
+                            <input type="hidden" name="productId" value="<%= item.id %>">
+                            <input type="hidden" name="action" value="remove">
+                            <button class="remove-btn" type="submit"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+                </div>
+            <% }); %>
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>$<%= subtotal %></span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span class="shipping-fee">Free</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span class="total-amount">$<%= total %></span>
+                </div>
+                
+                <button class="checkout-btn">Proceed to Checkout</button>
+            </div>
+            
+        <% } %>
+
+    </main>
+</body>
+</html>

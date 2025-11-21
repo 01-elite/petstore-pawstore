@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        :root {
+            --color-primary: #4f46e5; /* gradient base */
+            --color-secondary-bg: #f3f4f6;
+            --color-accent: #34d399;
+            --color-text-dark: #1f2937;
+            --color-text-light: #ffffff;
+            --color-warning: #f59e0b;
+            --color-critical: #991b1b;
+            --color-header-bg: #eef2ff;
+            --color-success: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--color-secondary-bg);
+            color: var(--color-text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        #dashboard-page {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.05);
+            min-height: 90vh;
+            display: flex;
+        }
+
+        #login-page {
+            display: none;
+            width: 100%;
+            max-width: 380px;
+            margin-top: 15vh;
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+            border: 1px solid #e5e7eb;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header h2 {
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-bottom: .5rem;
+        }
+        .login-header .fas {
+            font-size: 2.5rem;
+            color: var(--color-accent);
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .login-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: .5rem;
+        }
+        .login-form input {
+            width: 100%;
+            padding: .75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: .75rem;
+            background: var(--color-accent);
+            color: var(--color-text-dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        #login-message {
+            margin-top: 1rem;
+            padding: .75rem;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--color-critical);
+            background: #fecaca;
+            display: none;
+            font-weight: 600;
+        }
+
+        /* -----------------------------
+           Admin Sidebar Update
+        ------------------------------ */
+        .admin-sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #4f46e5, #6366f1);
+            color: #fff;
+            padding: 2rem 1rem;
+            border-radius: 12px 0 0 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .admin-logo {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .admin-logo i {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .admin-logo h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .admin-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .admin-nav .nav-item i {
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .admin-nav .nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+        }
+
+        .admin-nav .nav-item.active {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+        }
+
+        .admin-main-content {
+            flex-grow: 1;
+            padding: 2rem;
+        }
+
+        .admin-section {
+            display: none;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .admin-section.active { display: block; }
+
+        .section-title {
+            font-size: 1.35rem;
+            color: var(--color-primary);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: .75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .admin-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            flex: 1 1 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.half-width {
+            flex: 1 1 calc(50% - 1.5rem);
+        }
+
+        .admin-submit-btn {
+            background: var(--color-primary);
+            color: #fff;
+            padding: .75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .data-table th {
+            background: var(--color-header-bg);
+            color: var(--color-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: .2rem;
+        }
+        .edit-btn { color: var(--color-primary); }
+        .delete-btn { color: var(--color-critical); }
+
+        .status-badge.ok {
+            background: #d1fae5;
+            color: #065f46;
+            padding: .3rem .6rem;
+            border-radius: 20px;
+        }
+        .status-badge.low {
+            background: #fef3c7;
+            color: var(--color-warning);
+            padding: .3rem .6rem;
+            border-radius: 20px;
+        }
+        .status-badge.critical {
+            background: #fee2e2;
+            color: var(--color-critical);
+            padding: .3rem .6rem;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- LOGIN PAGE -->
+<div id="login-page">
+    <div class="login-header">
+        <i class="fas fa-user-lock"></i>
+        <h2>Admin Login Required</h2>
+        <p>Use: admin / password123</p>
+    </div>
+
+    <form id="login-form">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="adminEmail" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="adminPassword" required>
+        </div>
+
+        <button class="login-btn">Log In</button>
+        <div id="login-message">Invalid login</div>
+    </form>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page">
+    <aside class="admin-sidebar">
+        <div class="admin-logo">
+            <i class="fas fa-paw"></i>
+            <h2>Admin Panel</h2>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="#products" class="nav-item active"><i class="fas fa-box"></i> Products</a>
+            <a href="#stock" class="nav-item"><i class="fas fa-drumstick-bite"></i> Stock</a>
+            <a href="#" id="logout-btn" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main-content">
+        <!-- PRODUCTS SECTION -->
+        <section id="products" class="admin-section active">
+            <h3 class="section-title"><i class="fas fa-plus-circle"></i> Add New Product</h3>
+            <form class="admin-form" method="POST" action="/admin/add-product">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group half-width">
+                    <label>Category</label>
+                    <select name="category">
+                        <option>Bird</option>
+                        <option>Cat</option>
+                        <option>Dog</option>
+                        <option>Food</option>
+                    </select>
+                </div>
+                <div class="form-group half-width">
+                    <label>Price</label>
+                    <input type="number" name="price" step="0.01" required>
+                </div>
+                <div class="form-group half-width">
+                    <label>Stock</label>
+                    <input type="number" name="stock" required>
+                </div>
+                <div class="form-group half-width">
+                    <label>Reorder Threshold</label>
+                    <input type="number" name="reorderThreshold" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" name="imageUrl">
+                </div>
+                <button class="admin-submit-btn">Save Product</button>
+            </form>
+
+            <h3 class="section-title"><i class="fas fa-list-ul"></i> Existing Products</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th><th>Category</th><th>Price</th>
+                        <th>Stock</th><th>Threshold</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% allProducts.forEach(p => { %>
+                        <tr>
+                            <td><%= p.name %></td>
+                            <td><%= p.category %></td>
+                            <td>$<%= p.price %></td>
+                            <td><%= p.stock %></td>
+                            <td><%= p.reorderThreshold %></td>
+                            <td>
+                                <form method="POST" action="/admin/delete-product" style="display:inline;">
+                                    <input type="hidden" name="id" value="<%= p.id %>">
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </form>
+                                <form method="POST" action="/admin/update-product" style="display:inline;">
+                                    <input type="hidden" name="id" value="<%= p.id %>">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- STOCK SECTION -->
+        <section id="stock" class="admin-section">
+            <h3 class="section-title"><i class="fas fa-chart-line"></i> Pet Food Inventory</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th><th>Stock</th><th>Threshold</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% foodStock.forEach(f => { %>
+                        <tr>
+                            <td><%= f.name %></td>
+                            <td><%= f.stock %></td>
+                            <td><%= f.reorderThreshold %></td>
+                            <td>
+                                <% if(f.stock === 0){ %>
+                                    <span class="status-badge critical">CRITICAL</span>
+                                <% } else if(f.stock <= f.reorderThreshold){ %>
+                                    <span class="status-badge low">LOW</span>
+                                <% } else { %>
+                                    <span class="status-badge ok">OK</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+
+            <h3 class="section-title"><i class="fas fa-edit"></i> Update Stock</h3>
+            <form class="admin-form" method="POST" action="/admin/update-stock">
+                <div class="form-group half-width">
+                    <label>Food Item</label>
+                    <select name="foodId">
+                        <% foodStock.forEach(f => { %>
+                            <option value="<%= f.id %>"><%= f.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="form-group half-width">
+                    <label>New Quantity</label>
+                    <input type="number" name="newQuantity" required>
+                </div>
+                <button class="admin-submit-btn">Update Stock</button>
+            </form>
+        </section>
+    </main>
+</div>
+
+<script>
+const AUTH_KEY = "admin_session";
+
+function isLoggedIn(){ return localStorage.getItem(AUTH_KEY)==="true"; }
+
+function showLogin(){
+    document.getElementById("login-page").style.display="block";
+    document.getElementById("dashboard-page").style.display="none";
+}
+
+function showDashboard(){
+    document.getElementById("login-page").style.display="none";
+    document.getElementById("dashboard-page").style.display="flex";
+}
+
+document.getElementById("login-form").addEventListener("submit", e=>{
+    e.preventDefault();
+    const user = document.getElementById("adminEmail").value;
+    const pass = document.getElementById("adminPassword").value;
+
+    if(user==="admin" && pass==="password123"){
+        localStorage.setItem(AUTH_KEY,"true");
+        showDashboard();
+    } else {
+        document.getElementById("login-message").style.display="block";
+    }
+});
+
+document.getElementById("logout-btn").addEventListener("click",()=>{
+    localStorage.removeItem(AUTH_KEY);
+    showLogin();
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    if(isLoggedIn()) showDashboard();
+    else showLogin();
+
+    // Sidebar navigation switching
+    document.querySelectorAll(".nav-item").forEach(item=>{
+        item.addEventListener("click", e=>{
+            if(!item.getAttribute("href").startsWith("#")) return;
+            e.preventDefault();
+            const target = item.getAttribute("href");
+
+            document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+            item.classList.add("active");
+
+            document.querySelectorAll(".admin-section").forEach(sec=>sec.classList.remove("active"));
+            document.querySelector(target).classList.add("active");
+        });
+    });
+});
+</script>
+</body>
+</html>
