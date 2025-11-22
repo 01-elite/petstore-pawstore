@@ -1,4 +1,3 @@
-<!-- frontend/customer.html (Full Code with Dynamic Cart, Forms, and Search) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,69 +6,296 @@
     <title>Pet Store - Products</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+/* ============================================================
+   GLOBAL THEME — DARK BROWN (SAME AS AUTH + PROFILE)
+============================================================ */
+:root {
+    --brown-dark: #4a2f1e;
+    --brown-medium: #6e4b32;
+    --brown-light: #d8bba3;
+    --cream-bg: #f7f2eb;
+    --white: #ffffff;
+    --border-brown: #c7a388;
+    --text-dark: #3a2a22;
+    --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream-bg);
+    font-family: "Inter", sans-serif;
+    color: var(--text-dark);
+}
+
+/* ============================================================
+   NAVBAR
+============================================================ */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 40px;
+    background: var(--brown-dark);
+    border-bottom: 3px solid var(--cream-bg);
+    color: var(--white);
+}
+
+.logo a {
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.logo i {
+    font-size: 28px;
+}
+
+.nav-icons a {
+    color: var(--white);
+    margin-left: 20px;
+    font-size: 22px;
+    position: relative;
+}
+
+/* Cart Bubble */
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #ff0000;
+    color: #ffffff;
+    font-size: 11px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ============================================================
+   SEARCH BAR
+============================================================ */
+.nav-search-form {
+    width: 50%;
+}
+
+.search-bar {
+    background: var(--white);
+    border: 2px solid var(--border-brown);
+    padding: 14px 18px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+}
+
+.search-bar i {
+    font-size: 20px;
+    color: var(--brown-dark);
+    margin-right: 12px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+/* ============================================================
+   HERO BANNER
+============================================================ */
+.hero {
+    width: 100%;
+    height: 300px;
+    margin-top: 30px;
+    border-radius: 16px;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: var(--shadow-soft);
+    background: url("https://template.canva.com/EAGFO-585jI/1/0/1600w-IEZ2ZlPSQjs.jpg");
+}
+
+/* ============================================================
+   PRODUCT GRID
+============================================================ */
+.content {
+    padding: 20px 60px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 35px;
+    margin-top: 40px;
+}
+
+/* Card */
+.product-card {
+    background: var(--white);
+    border-radius: 16px;
+    border: 2px solid var(--border-brown);
+    overflow: hidden;
+    padding-bottom: 15px;
+    box-shadow: var(--shadow-soft);
+    transition: 0.25s;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.2);
+}
+
+/* Image — full visible */
+.product-card img {
+    width: 100%;
+    height: 230px;
+    object-fit: contain;
+    padding: 10px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-brown);
+}
+
+/* Info */
+.product-info {
+    padding: 18px;
+}
+
+.product-info h3 {
+    font-size: 20px;
+    color: var(--brown-dark);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.price {
+    color: var(--brown-medium);
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.description {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-top: 6px;
+    height: 40px;
+    overflow: hidden;
+}
+
+/* Add to cart */
+.add-to-cart-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--brown-dark);
+    border: none;
+    border-radius: 12px;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 16px;
+    margin-top: 12px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.add-to-cart-btn:hover {
+    background: var(--brown-medium);
+}
+
+/* No results */
+.no-results {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brown-dark);
+}
+
+
+
+</style>
+
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <header class="navbar">
-        <div class="logo">
-            <a href="/"><i class="fas fa-paw"></i><h1>Pet Store</h1></a>
+    <div class="logo">
+        <a href="/"><i class="fas fa-paw"></i><h1>Pet Store</h1></a>
+    </div>
+
+    <!-- SEARCH FORM (NOT WRAPPING ANYTHING) -->
+    <form method="GET" action="/" class="nav-search-form">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" name="search" placeholder="Search for products..."
+                   value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+            <button type="submit" style="display:none"></button>
         </div>
-        <nav class="nav-icons">
-            <a href="/cart" class="cart-icon" title="View Cart">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count"><%= cartCount %></span> 
-            </a>
-            <a href="/profile" title="My Profile"><i class="fas fa-user-circle"></i></a>
-            <!-- Icon change for a clear "Sign In" action -->
-            <a href="/auth" title="Sign In / Register"><i class="fas fa-sign-in-alt"></i></a> 
-        </nav>
-    </header>  
+    </form>
 
-    <main class="content">
-        <section class="hero">
-            <h2>Everything Your Pet Needs</h2>
-            <p>Quality products for your furry, feathered, and scaly friends</p>
-            
-            <!-- SEARCH FORM: Submits a GET request to the home page -->
-            <form method="GET" action="/">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <!-- 'name="search"' sends the query. 'value' pre-fills the box after a search. -->
-                    <input type="text" name="search" placeholder="Search for products..." 
-                           value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
-                    <!-- Hidden button allows pressing Enter to submit the search -->
-                    <button type="submit" style="display: none;"></button>
-                </div>
-            </form>
+    <nav class="nav-icons">
+        <a href="/cart" class="cart-icon" title="View Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count"><%= cartCount %></span> 
+        </a>
+        <a href="/profile"><i class="fas fa-user-circle"></i></a>
+        <a href="/auth"><i class="fas fa-sign-in-alt"></i></a>
+    </nav>
+</header>
+
+<section class="hero">
+            <!-- Image Only -->
         </section>
+    <!-- HERO BANNER -->
+    <main class="content">
+        
 
+        <!-- PRODUCT GRID -->
         <section class="product-grid">
-            
+
             <% if (products.length === 0 && searchQuery) { %>
+
                 <p class="no-results">No products found for "<strong><%= searchQuery %></strong>".</p>
+
             <% } else { %>
+
                 <% products.forEach(product => { %>
                 <div class="product-card">
-                    <!-- FIX: This line adds the missing <img> tag, using the imageUrl variable. -->
-                    <img src="<%= product.imageUrl %>" 
-                         alt="<%= product.name %>" 
-                         class="w-full h-48 object-cover rounded-t-lg"
+
+                    <!-- PRODUCT IMAGE -->
+                    <img src="<%= product.imageUrl %>"
+                         alt="<%= product.name %>"
+                         class="product-image"
                          onerror="this.onerror=null; this.src='https://placehold.co/400x300/e0e0e0/333333?text=Image+Missing'">
-                         
+
+                    <!-- PRODUCT INFO -->
                     <div class="product-info">
                         <h3><%= product.name %></h3>
-                        <span class="price">$<%= product.price.toFixed(2) %></span> 
+                        <span class="price">$<%= product.price.toFixed(2) %></span>
                         <p class="description"><%= product.description %></p>
-                        
+
+                        <!-- ADD TO CART BUTTON -->
                         <form method="POST" action="/cart/add">
                             <input type="hidden" name="productId" value="<%= product.id %>">
                             <button type="submit" class="add-to-cart-btn">
                                 Add to Cart <i class="fas fa-plus"></i>
                             </button>
                         </form>
-                        
                     </div>
+
                 </div>
                 <% }); %>
+
             <% } %>
 
         </section>

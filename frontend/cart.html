@@ -1,91 +1,352 @@
+<!-- frontend/cart.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="/css/style.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+/* ===========================================
+   THEME COLORS (LIGHT CREAM + SOFT BROWN)
+=========================================== */
+:root {
+    --bg-cream: #fdf7ee;
+    --white: #ffffff;
+
+    --brown: #7a4f2f;
+    --brown-dark: #593820;
+    --brown-light: #c8a68a;
+
+    --text-dark: #4a2e1e;
+    --shadow-soft: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* ===========================================
+   GLOBAL
+=========================================== */
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-cream);
+    font-family: "Inter", sans-serif;
+    color: var(--text-dark);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ===========================================
+   NAVBAR (Light theme like screenshot)
+=========================================== */
+.navbar {
+    background: var(--white);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+    border-bottom: 2px solid #f0e4d4;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav-icons a {
+    font-size: 22px;
+    color: var(--brown-dark);
+    position: relative;
+}
+
+/* Cart Notification Bubble (exact like screenshot) */
+.cart-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: var(--brown-dark);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+/* ===========================================
+   CART PAGE LAYOUT
+=========================================== */
+.cart-page {
+    max-width: 1050px;
+    margin: 40px auto;
+    padding: 10px;
+}
+
+.cart-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: var(--brown-dark);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ===========================================
+   CART ITEM CARD
+=========================================== */
+.cart-item {
+    background: var(--white);
+    border: 1px solid var(--brown-light);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+}
+
+/* LEFT SIDE (Image + Name) */
+.item-details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.cart-item img {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eee2d5;
+}
+
+/* RIGHT SIDE CONTROLS */
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* quantity box */
+.quantity-control {
+    display: flex;
+    border: 1px solid var(--brown-light);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.qty-btn {
+    padding: 6px 12px;
+    background: var(--white);
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--brown-dark);
+}
+
+.quantity-control input {
+    width: 35px;
+    text-align: center;
+    border: none;
+    background: var(--white);
+    font-size: 15px;
+}
+
+.item-price {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--brown-dark);
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--brown);
+    cursor: pointer;
+}
+
+/* ===========================================
+   SUMMARY BOX
+=========================================== */
+.summary-card {
+    background: var(--white);
+    border: 1px solid var(--brown-light);
+    padding: 25px;
+    border-radius: 14px;
+    width: 350px;
+    margin-left: auto;
+    margin-top: 40px;
+    box-shadow: var(--shadow-soft);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.total-row {
+    border-top: 2px solid var(--brown-light);
+    padding-top: 14px;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.total-amount {
+    color: var(--brown-dark);
+}
+
+/* Proceed button */
+.checkout-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--brown-dark);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.checkout-btn:hover {
+    background: #472a18;
+}
+
+/* Empty cart */
+.empty-cart-message {
+    text-align: center;
+    color: var(--brown);
+    font-size: 18px;
+    margin-top: 40px;
+}
+</style>
+
 </head>
+
 <body>
-    <header class="navbar">
-        <div class="logo">
-            <a href="/"><i class="fas fa-arrow-left"></i><h1>Back to Store</h1></a>
-        </div>
-        <nav class="nav-icons">
-            <a href="/cart" class="cart-icon">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count"><%= cartItems.length %></span> 
-            </a>
-            <a href="/auth"><i class="fas fa-user"></i></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i></a>
-        </nav>
-    </header>
 
-    <main class="cart-page">
-        <h2 class="cart-title"><i class="fas fa-shopping-bag"></i> Shopping Cart</h2>
-        
-        <% if (cartItems.length === 0) { %>
-            <p class="empty-cart-message">Your cart is empty. <a href="/">Start shopping!</a></p>
-        <% } else { %>
-        
-            <% cartItems.forEach(item => { %>
-                <div class="cart-item">
-                    <div class="item-details">
-                        <div class="item-image-placeholder">[Image]</div>
-                        <div>
-                            <h3 class="item-name"><%= item.name %></h3>
-                            <p class="item-unit-price">Unit Price: $<%= item.price.toFixed(2) %></p>
-                        </div>
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">
+        <a href="/"><i class="fas fa-arrow-left"></i> Back to Store</a>
+    </div>
+
+    <nav class="nav-icons">
+        <a href="/cart" class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count"><%= cartItems.length %></span>
+        </a>
+        <a href="/profile"><i class="fas fa-user"></i></a>
+        <a href="/auth"><i class="fas fa-sign-in-alt"></i></a>
+    </nav>
+</header>
+
+<!-- CART CONTENT -->
+<main class="cart-page">
+
+    <h2 class="cart-title"><i class="fas fa-shopping-bag"></i> Shopping Cart</h2>
+
+    <% if (cartItems.length === 0) { %>
+
+        <p class="empty-cart-message">
+            Your cart is empty. <a href="/">Start shopping</a>
+        </p>
+
+    <% } else { %>
+
+        <% cartItems.forEach(item => { %>
+
+            <div class="cart-item">
+
+                <!-- Left -->
+                <div class="item-details">
+                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
+                    <div>
+                        <h3><%= item.name %></h3>
+                        <p>Unit Price: $<%= item.price %></p>
                     </div>
-                    
-                    <div class="item-controls">
-                        <div class="quantity-control">
-                            
-                            <form method="POST" action="/cart/update" style="display:inline;">
-                                <input type="hidden" name="productId" value="<%= item.id %>">
-                                <input type="hidden" name="action" value="decrement">
-                                <button class="qty-btn" type="submit" <%= item.quantity <= 1 ? 'disabled' : '' %> >-</button>
-                            </form>
+                </div>
 
-                            <input type="text" value="<%= item.quantity %>" readonly>
-                            
-                            <form method="POST" action="/cart/update" style="display:inline;">
-                                <input type="hidden" name="productId" value="<%= item.id %>">
-                                <input type="hidden" name="action" value="increment">
-                                <button class="qty-btn" type="submit">+</button>
-                            </form>
-                            
-                        </div>
-                        <span class="item-price">$<%= item.totalPrice %></span>
-                        
-                        <form method="POST" action="/cart/update" style="display:inline;">
+                <!-- Right -->
+                <div class="item-controls">
+
+                    <div class="quantity-control">
+                        <form method="POST" action="/cart/update">
                             <input type="hidden" name="productId" value="<%= item.id %>">
-                            <input type="hidden" name="action" value="remove">
-                            <button class="remove-btn" type="submit"><i class="fas fa-trash-alt"></i></button>
+                            <input type="hidden" name="action" value="decrement">
+                            <button class="qty-btn" type="submit" <%= item.quantity <= 1 ? 'disabled' : '' %>>-</button>
+                        </form>
+
+                        <input type="text" value="<%= item.quantity %>" readonly>
+
+                        <form method="POST" action="/cart/update">
+                            <input type="hidden" name="productId" value="<%= item.id %>">
+                            <input type="hidden" name="action" value="increment">
+                            <button class="qty-btn" type="submit">+</button>
                         </form>
                     </div>
-                </div>
-            <% }); %>
-            <div class="summary-card">
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span>$<%= subtotal %></span>
-                </div>
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span class="shipping-fee">Free</span>
-                </div>
-                <div class="summary-row total-row">
-                    <span>Total</span>
-                    <span class="total-amount">$<%= total %></span>
-                </div>
-                
-                <button class="checkout-btn">Proceed to Checkout</button>
-            </div>
-            
-        <% } %>
 
-    </main>
+                    <span class="item-price">$<%= item.totalPrice %></span>
+
+                    <form method="POST" action="/cart/update">
+                        <input type="hidden" name="productId" value="<%= item.id %>">
+                        <input type="hidden" name="action" value="remove">
+                        <button class="remove-btn" type="submit"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+
+                </div>
+            </div>
+
+        <% }); %>
+
+        <!-- Summary -->
+        <div class="summary-card">
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>$<%= subtotal %></span>
+            </div>
+
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Free</span>
+            </div>
+
+            <div class="summary-row total-row">
+                <span>Total</span>
+                <span class="total-amount">$<%= total %></span>
+            </div>
+
+            <button class="checkout-btn">Proceed to Checkout</button>
+
+        </div>
+
+    <% } %>
+
+</main>
+
 </body>
 </html>

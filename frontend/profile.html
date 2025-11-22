@@ -5,111 +5,258 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="/css/style.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Specific styling for the profile page */
-        .profile-container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .profile-title {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 2em;
-            border-bottom: 2px solid #ff8c61;
-            padding-bottom: 10px;
-        }
-        .profile-form .form-group {
-            margin-bottom: 20px;
-        }
-        .profile-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-        .profile-form input[type="text"],
-        .profile-form input[type="email"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        .profile-form button {
-            width: 100%;
-            padding: 15px;
-            background-color: #4CAF50; /* Green Save Button */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s;
-        }
-        .profile-form button:hover {
-            background-color: #45a049;
-        }
-    </style>
+
+<style>
+/* ============================================================
+   PROFILE PAGE — DARK BROWN THEME (FINAL POLISHED VERSION)
+============================================================ */
+
+/* COLORS */
+:root {
+    --brown-dark: #4a2f1e;
+    --brown-medium: #6e4b32;
+    --brown-light: #d8bba3;
+    --cream-bg: #f7f2eb;
+    --white: #ffffff;
+    --border-brown: #c7a388;
+    --text-dark: #3a2a22;
+}
+
+/* GLOBAL */
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream-bg);
+    font-family: "Inter", sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+    width: 90%;
+    margin: 20px auto;
+    padding: 14px 24px;
+    background: var(--brown-medium);;
+    border-bottom: 3px solid var(--brown-medium);
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 60px;
+    margin-top: 60px;
+}
+
+
+.logo a {
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.nav-icons {
+    position: relative;
+    display: flex;
+    gap: 25px;
+}
+
+.nav-icons a {
+    color: var(--white);
+    font-size: 22px;
+}
+
+/* CART COUNT BUBBLE FIXED */
+.cart-icon {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #b33a3a;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MAIN CONTENT */
+main.content {
+    display: flex;
+    justify-content: center;
+    padding: 30px 12px 60px 12px;
+}
+
+/* PROFILE CARD */
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+    background: var(--white);
+    padding: 35px;
+    border-radius: 16px;
+    border: 2px solid var(--border-brown);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* TITLE */
+.profile-title {
+    text-align: center;
+    font-size: 27px;
+    font-weight: 800;
+    color: var(--brown-dark);
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--brown-light);
+}
+
+.profile-title i {
+    margin-right: 8px;
+}
+
+/* FORM */
+.form-group {
+    margin-bottom: 18px;
+}
+
+/* LABELS */
+.profile-form label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 15px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* INPUT SMALL + PREMIUM */
+.profile-form input {
+    width: 90%;
+    padding: 10px 12px; /* Smaller and clean */
+    border-radius: 8px;
+    border: 2px solid var(--border-brown);
+    font-size: 14px;
+    background: var(--white);
+    color: var(--text-dark);
+    transition: 0.25s ease;
+    display: flex;
+    align-items: center;
+    
+}
+
+.profile-form input:focus {
+    border-color: var(--brown-medium);
+    box-shadow: 0 0 0 3px rgba(110,75,50,0.15);
+}
+
+/* BUTTON */
+.profile-form button {
+    width: 100%;
+    background: var(--brown-dark);
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.profile-form button:hover {
+    background: var(--brown-medium);
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .navbar {
+        width: 92%;
+        padding: 12px 18px;
+    }
+
+    .profile-container {
+        padding: 25px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to   {opacity: 1; transform: translateY(0);}
+}
+</style>
+
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <header class="navbar">
         <div class="logo">
-            <!-- Back button to return to the product page -->
-            <a href="/"><i class="fas fa-arrow-left"></i><h1>Back to Store</h1></a>
+            <a href="/"><i class="fas fa-arrow-left"></i> Back to Store</a>
         </div>
+
         <nav class="nav-icons">
             <a href="/cart" class="cart-icon">
                 <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count"><%= cartCount %></span> 
+                <span class="cart-count"><%= cartCount %></span>
             </a>
-            <a href="/profile" title="My Profile"><i class="fas fa-user-circle"></i></a>
-            <a href="/auth" title="Sign In / Register"><i class="fas fa-sign-in-alt"></i></a>
+            <a href="/profile"><i class="fas fa-user-circle"></i></a>
+            <a href="/auth"><i class="fas fa-sign-in-alt"></i></a>
         </nav>
     </header>
 
+    <!-- MAIN -->
     <main class="content">
         <div class="profile-container">
-            <h2 class="profile-title"><i class="fas fa-user-circle"></i> My Profile Details</h2>
 
-            <!-- Form submits data to the POST /profile/update route -->
+            <h2 class="profile-title"><i class="fas fa-user"></i> My Profile</h2>
+
             <form class="profile-form" method="POST" action="/profile/update">
-                
+
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" value="<%= user.name %>" required>
+                    <label>Full Name</label>
+                    <input type="text" name="name" value="<%= user.name %>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone" value="<%= user.phone %>" required>
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" value="<%= user.phone %>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="<%= user.email %>" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" value="<%= user.address %>" required>
+                    <label>Email</label>
+                    <input type="email" name="email" value="<%= user.email %>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="pincode">Pincode</label>
-                    <input type="text" id="pincode" name="pincode" value="<%= user.pincode %>" required>
+                    <label>Address</label>
+                    <input type="text" name="address" value="<%= user.address %>" required>
                 </div>
 
-                <button type="submit"><i class="fas fa-save"></i> Save Profile</button>
+                <div class="form-group">
+                    <label>Pincode</label>
+                    <input type="text" name="pincode" value="<%= user.pincode %>" required>
+                </div>
+
+                <button type="submit">
+                    <i class="fas fa-save"></i> Save Profile
+                </button>
+
             </form>
+
         </div>
     </main>
+
 </body>
 </html>
